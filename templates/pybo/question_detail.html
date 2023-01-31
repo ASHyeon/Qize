@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load static %} <!-- css, js, images 최상단에 -->
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <!--  Bootstrap  -->
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+    <script src="{% static 'common.js' %}"></script>
+
+    <script>
+        function doSave(){
+        <!--console.log('doSave');-->
+           let frm = document.answer_frm;
+           let content = frm.content.value;
+           console.log('content'+content);
+           if(isEmpty(content) == true){
+                alert('내용을 입력 하세요');
+                frm.content.focus();
+                return ;
+           }
+
+           //서버로 전송
+           frm.submit();
+        }
+
+    </script>
+
+    <title>질문답변</title>
+</head>
+<body>
+<!-- container -->
+<div class="container my-3">
+    <!-- 질문 -->
+    <h2 class="border-bottom py-2">{{question.subject}}</h2>
+    <div class="card">
+        <div class="card-text" style="pre-line">{{question.content}}</div>
+        <div class="d-flex justify-content-end">
+            <div class="badge bg-light text-dark p-2">
+                {{question.create_date}}
+            </div>
+        </div>
+    </div>
+    <!-- 질문 end------------------------------------------------>
+
+    <!-- 답변 -->
+    <h5 class="border-bottom py-2 my-3">{{question.answer_set.count}} 개의 답변이 있습니다.</h5>
+    <!-- 답변 end-->
+
+    <!--  등록된 답변 출력  -->
+    {% for answer in question.answer_set.all %}
+    <div class="card my-3">
+        <div class="card-text" style="pre-line">{{answer.content}}</div>
+        <div class="d-flex justify-content-end">
+            <div class="badge bg-light text-dark p-2">
+                {{answer.create_date}}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+
+    <!--답변등록-->
+    <form action="{% url 'pybo:answer_create' question.id %}" method="post" class="my-3" name="answer_frm">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+            <span class="input-group-text">내용</span>
+            <textarea rows="10" class="form-control" name="content" id="content"></textarea>
+        </div>
+        <input type="button" value="답변등록" class="btn btn-outline-success btn-sm" onclick="doSave();">
+    </form>
+    <!--답변등록end----------------------------------------------->
+
+
+</div>
+<!-- container end------------------------------------------>
+
+
+</body>
+</html>

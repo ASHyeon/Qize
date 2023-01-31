@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    {% load static %} <!-- css, js, images 최상단에 -->
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <!--  Bootstrap  -->
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+    <title>질문 등록</title>
+</head>
+<body>
+<!--  container  -->
+<div class="container">
+    <!--   제목   -->
+    <div class="text-start mb-5">
+        <h2>질문 등록</h2>
+    </div>
+    <!-- button -->
+    <div class="d-grid gap-2 d-md-flex justify-content-end mb-2">
+        <input type="button" class="btn btn-outline-primary btn-sm" value="목록">
+        <input type="button" class="btn btn-outline-success btn-sm" value="등록">
+    </div>
+    <!-- 등록 form -->
+    <form action="">
+        <div class="mb-3 row">
+        <label for="subject" class="col-sm-2 col-md-2 col-lg-2 col-form-label">제목</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="subject" name="subject">
+        </div>
+        </div>
+        <div class="mb-3 row">
+        <label for="reg_id" class="col-sm-2 col-md-2 col-lg-2 col-form-label">등록자</label>
+        <div class="col-sm-10">
+            <input type="text" readonly class="form-control-plaintext" id="reg_id" name="reg_id">
+        </div>
+        </div>
+        <div class="input-group">
+          <span class="input-group-text">내용</span>
+          <textarea class="form-control" aria-label="With textarea" style="pre-line"></textarea>
+        </div>
+
+    </form>
+</div>
+
+</body>
+</html>
