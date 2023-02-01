@@ -1,34 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    {% load static %} <!-- css, js, images 최상단에 -->
-    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
-    <!--  Bootstrap  -->
-    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
-    <script src="{% static 'common.js' %}"></script>
-
-    <script>
-        function doSave(){
-        <!--console.log('doSave');-->
-           let frm = document.answer_frm;
-           let content = frm.content.value;
-           console.log('content'+content);
-           if(isEmpty(content) == true){
-                alert('내용을 입력 하세요');
-                frm.content.focus();
-                return ;
-           }
-
-           //서버로 전송
-           frm.submit();
-        }
-
-    </script>
-
-    <title>질문답변</title>
-</head>
-<body>
+{% extends 'base.html'%}
+{% block content %}
 <!-- container -->
 <div class="container my-3">
     <!-- 질문 -->
@@ -59,7 +30,6 @@
     </div>
     {% endfor %}
 
-
     <!--답변등록-->
     <form action="{% url 'pybo:answer_create' question.id %}" method="post" class="my-3" name="answer_frm">
         {% csrf_token %}
@@ -70,11 +40,21 @@
         <input type="button" value="답변등록" class="btn btn-outline-success btn-sm" onclick="doSave();">
     </form>
     <!--답변등록end----------------------------------------------->
-
-
+<script>
+        function doSave(){
+        <!--console.log('doSave');-->
+           let frm = document.answer_frm;
+           let content = frm.content.value;
+           console.log('content'+content);
+           if(isEmpty(content) == true){
+                alert('내용을 입력 하세요');
+                frm.content.focus();
+                return ;
+           }
+           //서버로 전송
+           frm.submit();
+        }
+    </script>
 </div>
 <!-- container end------------------------------------------>
-
-
-</body>
-</html>
+{% endblock %}

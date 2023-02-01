@@ -2,10 +2,30 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.utils import timezone
 from .models import Question
+from .froms import QusetionForm
 
 
 
 # Create your views here.
+
+def question_create(request):
+    '''질문등록'''
+
+    print('request.method:{}'.format(request.method))
+    if request.method == 'POST':
+        print('question_create post')
+        # 저장
+        form = QusetionForm(request.POST) # request.POST 데이터
+
+        if form.is_valid(): # form(질문등록)이 유효하면
+            question=form.save(commit=False) # subject, content만 저장(commit은 하지 않음)
+            question.create_date = timezone.now()
+            question.save() # 날짜 까지 생성해서 저장(commit)
+            return redirect("pybo:index")
+    else:
+        form = QusetionForm()
+        context = {'form': form}
+        return render(request,'pybo/question_form.html',context)
 
 
 def boot_menu(request):

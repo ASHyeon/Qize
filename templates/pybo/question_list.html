@@ -1,14 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    {% load static %} <!-- css, js, images 최상단에 -->
-    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
-    <!--  Bootstrap  -->
-    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block content%}
 <!--  container  -->
 <div class="container mb-2">
     <!--   제목   -->
@@ -37,7 +28,7 @@
         <!-- button -->
         <div class="col-sm-1 col-md-1 col-lg-1 text-end">
             <input type="button" class="btn btn-outline-primary btn-sm" value="조회">
-            <a href="{% url 'pybo:boot_reg' %}"><input type="button" class="btn btn-outline-success btn-sm" value="등록"></a>
+            <a href="{% url 'pybo:question_create' %}"><input type="button" class="btn btn-outline-success btn-sm" value="등록"></a>
         </div>
     </div>
 </div>
@@ -62,7 +53,7 @@
         </tr>
         {% endfor %}
         {% else %}
-            <td colspan="99">질문이 없습니다.</td>
+        <td colspan="99">질문이 없습니다.</td>
         {% endif %}
         </tbody>
     </table>
@@ -88,8 +79,4 @@
         </ul>
     </nav>
 </div>
-
-
-
-</body>
-</html>
+{% endblock %}
