@@ -1,43 +1,45 @@
 {% extends 'base.html' %}
 {% block content %}
-<!-- container -->
-<div class="container my-3">
+<!-- container-->
+<div class="container">
+    <!-- 제목 -->
     <div class="text-start mb-5">
-        <h2>질문 등록</h2>
+        <h2>질문등록</h2>
     </div>
-
-    <form method="post" action="{% url 'pybo:question_create' %}" class="post-form my-3">
+    <form method="post" class="post-form my-3">
         {% csrf_token %}
-        <!--  form validation 기능  -->
+        <!-- form validation기능 -->
         {% if form.errors %}
         <div class="alert alert-danger" role="alert">
             {% for field in form %}
-                {% if field.errors %}
-                    <div><strong>{{ field.label }}</strong></div>
-                    {{ field.errors }}
-                {% endif %}
+            {% if field.errors %}
+            <div><strong>{{ field.label }}</strong></div>
+            {{ field.errors }}
+            {% endif %}
             {% endfor %}
         </div>
         {% endif %}
-        <!--  form validation 기능 end  -->
-
+        <!-- form validation기능 end -->
         <div class="mb-3">
             <label for="subject" class="col-form-label">제목</label>
             <div class="">
+                <!--템플릿 필터
+                  템플릿 필터는 변수 값을 특정한 포맷으로 변형하는 기능.
+                -->
                 <input type="text" class="form-control" id="subject" name="subject"
                        value="{{ form.subject.value|default_if_none:'' }}">
             </div>
         </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">내용</span>
-            <!-- content에 데이터가 없으면 None이라는 문자열이 표시 됨, None대신 공백으로 표시하세요 -->
-            <textarea rows="10" class="form-control" aria-label="With textarea" name="content" id="content">{{ form.content.value|default_if_none:'' }}</textarea>
+        <div class="mb-3">
+            <label for="content" class="col-form-label">내용</label>
+            <div class="">
+                <!-- content에 데이터가 없으면 None이라는 문자열이 표시 됨, None대신 공백으로 표시하세요.-->
+                <textarea rows="10" class="form-control" name="content" id="content">{{ form.content.value|default_if_none:'' }}</textarea>
+            </div>
         </div>
-
-        <!-- 모델 폼과 연결된 subject, content에 값을 저장할수 있는 form생성 -->
-        <button type="submit" class="btn btn-outline-success btn-sm">저장</button>
+        <!--모델 폼과 연결된 subject, content에 값을 저장할수 있는 form생성 -->
+        <button type="submit" class="btn btn-primary btn-sm">저장</button>
     </form>
 </div>
-<!-- container end------------------------------------------>
-
+<!-- container end-->
 {% endblock %}

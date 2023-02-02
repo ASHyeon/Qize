@@ -1,20 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    {% load static %} <!-- css, js, images 최상단에 -->
-    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
-    <!--  Bootstrap  -->
-    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
-    <title>질문 등록</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block content%}
 <!--  container  -->
 <div class="container">
     <!--   제목   -->
     <div class="text-start mb-5">
-        <h2>질문 등록</h2>
+        <h2 class="border-bottom py-2">질문 등록</h2>
     </div>
     <!-- button -->
     <div class="d-grid gap-2 d-md-flex justify-content-end mb-2">
@@ -42,6 +32,4 @@
 
     </form>
 </div>
-
-</body>
-</html>
+{% endblock %}

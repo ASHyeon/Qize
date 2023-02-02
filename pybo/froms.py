@@ -23,11 +23,7 @@ class QusetionForm(forms.ModelForm):
         model = Question # 사용할 question model
 
         fields = ['subject', 'content'] # QusetionFormt에서 사용할 question model의 속성
-        # widgets = {
-        #     #class = "form-control"
-        #     'subject': forms.TextInput(attrs={'class': 'form-control'}),
-        #     'content': forms.Textarea(attrs={'class': 'form-control', 'rows':10}),
-        # }
+
         labels ={ # subject -> 제목 으로 변경
             'subject':'제목',
             'content':'내용',

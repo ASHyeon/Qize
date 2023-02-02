@@ -4,8 +4,11 @@
 <div class="container mb-2">
     <!--   제목   -->
     <div class="text-start mb-5">
-        <h2 class="border-bottom py-2">질문 목록</h2>
+        <h2 class="border-bottom py-2">무비차트</h2>
     </div>
+    {{title}} <br>
+    {{rrr}} <br>
+    {{poster}}
     <!-- 검색, 버튼 -->
     <div class="d-grid gap-2 d-md-flex justify-content-end">
         <!-- 검색 form-->
@@ -46,41 +49,21 @@
         </tr>
         </thead>
         <tbody>
+        {% if title %}
+        {% for t in title %}
         <tr>
             <td class="text-center">1</td>
-            <td class="text-start">제목01</td>
+            <td class="text-start">{{t}}</td>
             <td class="text-center">이상무</td>
             <td class="text-center">2023-01-30</td>
             <td class="text-end">3</td>
         </tr>
-        <tr>
-            <td class="text-center">1</td>
-            <td class="text-start">제목01</td>
-            <td class="text-center">이상무</td>
-            <td class="text-center">2023-01-30</td>
-            <td class="text-end">3</td>
-        </tr>
-        <tr>
-            <td class="text-center">1</td>
-            <td class="text-start">제목01</td>
-            <td class="text-center">이상무</td>
-            <td class="text-center">2023-01-30</td>
-            <td class="text-end">3</td>
-        </tr>
-        <tr>
-            <td class="text-center">1</td>
-            <td class="text-start">제목01</td>
-            <td class="text-center">이상무</td>
-            <td class="text-center">2023-01-30</td>
-            <td class="text-end">3</td>
-        </tr>
-        <tr>
-            <td class="text-center">1</td>
-            <td class="text-start">제목01</td>
-            <td class="text-center">이상무</td>
-            <td class="text-center">2023-01-30</td>
-            <td class="text-end">3</td>
-        </tr>
+        {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="99">no data found.</td>
+            </tr>
+        {% endif %}
         </tbody>
     </table>
 </div>
