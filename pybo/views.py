@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseNotAllowed
 from django.utils import timezone
+from django.core.paginator import Paginator
+
 from .models import Question
 from .froms import QusetionForm, AnswerForm
 from bs4 import BeautifulSoup
@@ -43,7 +45,7 @@ def crawling_cgv(request):
 
             print(title[page].getText(), rrr[page].getText(), imgUrlPath)
 
-        context = {'title': title_list, 'rrr':rrr_list, 'poster':poster_list}
+        context = {'context':zip(title_list, rrr_list,poster_list)}
 
     else:
         print('접속오류')
@@ -119,9 +121,33 @@ def detail(request, question_id):
 def index(request):
     '''question 목록'''
     # list order create_date desc
-    logging.info('index 레벨로 출력')
-    question_list = Question.objects.order_by('-create_date')  # order_by('-필드') desc, asc order_by('필드')
+    # logging.info('index 레벨로 출력')
+
+    # 입력인자
+    page=request.GET.get('page','1') # 페이지
+    logging.info('page:{}'.format(page))
+
+    question_list = Question.objects.order_by('-create_date') # order_by('-필드') desc, asc order_by('필드')
+    # paging
+    paginator=Paginator(question_list, 10)
+    page_obj=paginator.get_page(page)
+    # paginator.count : 전체 게시물 개수
+    # paginator.per_page : 페이지당 보여줄 게시물 개수
+    # paginator.page_range : 페이지 범위
+    # number : 현재 페이지 번호
+    # previous_page_number : 이전 페이지 번호
+    # next_page_number : 다음 페이지 번호
+    # has_previous : 이전 페이지 유무
+    # has_next : 다음 페이지 유무
+    # start_index : 현재 페이지 시작 인덱스(1부터 시작)
+    # end_index : 현재 페이지 끝 인덱스
+
+
+
+
+
     # question_list = Question.objects.filter(id=99)
-    context = {'question_list': question_list}
+    context = {'question_list': page_obj}
+    logging.info('question_list:{}'.format(page_obj))
 
     return render(request, 'pybo/question_list.html', context)
