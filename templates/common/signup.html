@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+    <div class="text-start mb-5">
+        <h2 class="border-bottom py-2">회원가입</h2>
+    </div>
+
+    <form action="{% url 'common:signup' %}" method="post">
+        {% csrf_token %}
+        <!-- form validation기능 -->
+        {% include "form_errors.html" %}
+        <!-- form validation기능 end -->
+        <div class="mb-3 row">
+            <label for="username" class="col-form-label">사용자ID</label>
+            <div>
+                <input type="text" class="form-control" id="username" name="username"
+                       value="{{ form.username.value|default_if_none:'' }}">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="password1" class="col-form-label">비밀번호</label>
+            <div>
+                <input type="password" class="form-control" id="password1" name="password1"
+                       value="{{ form.password1.value|default_if_none:'' }}">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="password2" class="col-form-label">비밀번호 확인</label>
+            <div>
+                <input type="password" class="form-control" id="password2" name="password2"
+                       value="{{ form.password2.value|default_if_none:'' }}">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="email" class="col-form-label">이메일</label>
+            <div>
+                <input type="text" class="form-control" id="email" name="email"
+                       value="{{ form.email.value|default_if_none:'' }}">
+            </div>
+        </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-end mb-2">
+            <input type="submit" class="btn btn-outline-primary btn-sm" value="회원가입">
+        </div>
+    </form>
+
+</div>
+
+
+{% endblock %}

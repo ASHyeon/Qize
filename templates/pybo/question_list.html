@@ -41,7 +41,8 @@
         <thead>
         <tr class="table-dark">
             <th scope="col" class="text-center">No.</th>
-            <th scope="col" class="text-center">제목</th>
+            <th scope="col" class="text-center" style="width:50%;">제목</th>
+            <th scope="col" class="text-center">글쓴이</th>
             <th scope="col" class="text-center">작성일</th>
         </tr>
         </thead>
@@ -57,6 +58,7 @@
                 {% else %} <!--답변이 없는 경우-->
                 {% endif %}
             </td>
+            <td class="text-center">{{question.author.username}}</td> <!-- 글쓴이 -->
             <td class="text-center">{{question.create_date|date:"Y-m-d"}}</td>
         </tr>
         {% endfor %}
