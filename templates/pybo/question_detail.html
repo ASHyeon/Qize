@@ -1,4 +1,5 @@
 {% extends 'base.html'%}
+{% load pybo_filter %}
 {% block content %}
 <!-- container -->
 <div class="container my-3">
@@ -17,10 +18,9 @@
             {% endfor %}
         </div>
         {% endif %}
-
         <!-- message표시 end------------->
 
-        <div class="card-text" style="pre-line;">{{question.content}}</div>
+        <div class="card-text">{{question.content|mark}}</div>
         <div class="d-flex justify-content-end">
             <!-- 수정자, 수정일-->
             {% if question.modify_date %}
@@ -38,10 +38,14 @@
             <!-- 등록자, 등록일 end-->
         </div>
         <!-- 질문수정 -->
-        <div>
+        <div class="my-3">
+            <!-- 좋아요 -->
+            <a href="javascript:void(0);"
+               data-uri ="{% url 'pybo:question_vote' question.id %}" class="recommend btn btn-outline-success btn-sm ">
+                좋아요 <span class="badge rounded-pill bg-warning">{{question.voter.count}}</span> </a>
             {% if question.author == request.user %} <!-- 글쓴이와 로그인한 사용자가 동일 하면 -->
             <a href="{% url 'pybo:question_modify' question.id %}" class="btn btn-outline-primary btn-sm my-3">수정</a>
-            <a href="javascript:void(0);" data-uri ="{% url 'pybo:question_delete' question.id %}" class=" delete btn btn-outline-danger btn-sm my-3">삭제</a>
+            <a href="javascript:void(0);" data-uri ="{% url 'pybo:question_delete' question.id %}" class=" delete btn btn-outline-danger btn-sm ">삭제</a>
             {% endif %}
         </div>
 
@@ -55,6 +59,8 @@
     <!--  등록된 답변 출력  -->
     {% for answer in question.answer_set.all %}
     <div class="card my-3">
+        <!-- answer_+answer.id -->
+        <a id="answer_{{answer.id}}"></a>
         <div class="card-text" style="pre-line">{{answer.content}}</div>
         <div class="d-flex justify-content-end">
             <!-- 수정자, 수정일-->
@@ -70,11 +76,17 @@
                 <div>{{answer.create_date}}</div>
             </div>
         </div>
-        <div>
-            <a href="{% url 'pybo:answer_modify' answer.id %}" class="btn btn-outline-primary btn-sm my-3">수정</a>
-            <a href="javascript:void(0);" class="delete btn btn-outline-danger btn-sm my-3"
-                    data-uri = "{% url 'pybo:answer_delete' answer.id %}" >삭제</a>
+        <div class="my-3">
+            <!-- 좋아요 -->
+            <a href="javascript:void(0);"
+               data-uri ="{% url 'pybo:answer_vote' answer.id %}" class="recommend btn btn-outline-success btn-sm ">
+                좋아요 <span class="badge rounded-pill bg-warning">{{answer.voter.count}}</span> </a>
 
+            {% if request.user == answer.author %} <!-- 본인 글만 수정 삭제 -->
+            <a href="{% url 'pybo:answer_modify' answer.id %}" class="btn btn-outline-primary btn-sm ">수정</a>
+            <a href="javascript:void(0);" class="delete btn btn-outline-danger btn-sm "
+                    data-uri = "{% url 'pybo:answer_delete' answer.id %}" >삭제</a>
+            {% endif %}
         </div>
     </div>
     {% endfor %}
@@ -101,7 +113,6 @@
 {% block script%}
     <script>
         // 삭제 : getElementsByClassName 'delete' 클래스 이름으로 element찾기
-
         // const delete_elements = document.getElementsByClassName("delete");
         // 배열
         const delete_elements = document.querySelectorAll(".delete");
@@ -118,18 +129,16 @@
             });
         });
 
-        function doSave(){
-        <!--console.log('doSave');-->
-           let frm = document.answer_frm;
-           let content = frm.content.value;
-           console.log('content'+content);
-           if(isEmpty(content) == true){
-                alert('내용을 입력 하세요');
-                frm.content.focus();
-                return ;
-           }
-           //서버로 전송
-           frm.submit();
-        }
+        //question: 좋아요 recommend
+        const recommend_elements = document.querySelectorAll(".recommend");
+        Array.from(recommend_elements).forEach(function(element){
+            element.addEventListener('click',function(){
+                 console.log('recommend click');
+                 if(confirm('좋아요 하시겠습니까?')){
+                     console.log('this.dataset.uri:'+this.dataset.uri);
+                     location.href = this.dataset.uri;
+                 }
+            });								
+        });
     </script>
-    {% endblock %}
+{% endblock %}

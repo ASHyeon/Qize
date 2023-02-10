@@ -8,12 +8,25 @@ since 2023.01.09 Copyright (C) by KandJang All right reserved.
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from django.utils import timezone
 
 from ..froms import AnswerForm
 from ..models import Question, Answer
 
+@login_required(login_url='common:login')
+def answer_vote(request, answer_id):
+    answer = get_object_or_404(Answer, pk=answer_id)
+
+    # 본인 글 추천 불가능
+    if request.user == answer.author:
+        messages.error(request, '자신이 작성한 글은 추천할 수 없습니다.')
+        return redirect('pybo:detail', question_id = answer.question.id)
+    else:
+        answer.voter.add(request.user)
+
+    return redirect('{}#answer_{}'.
+                    format(resolve_url('pybo:detail', question_id=answer.question.id), answer.id))
 
 @login_required(login_url='common:login')
 def answer_delete(request, answer_id):
@@ -46,7 +59,9 @@ def answer_modify(request, answer_id):
             answer=form.save(commit=False)
             answer.modify_date=timezone.now()
             answer.save()
-            return redirect('pybo:detail', question_id=answer.question.id)
+            #http://127.0.0.1:8000/pybo/515/#answer_46
+            return redirect('{}#answer_{}'.
+                            format(resolve_url('pybo:detail',question_id=answer.question.id), answer.id))
     else:                        # 수정 form의 template
         form = AnswerForm(instance=answer)
     context={'answer':answer, 'form':form}
@@ -67,7 +82,9 @@ def answer_create(request, question_id):
             answer.question = question
             answer.author = request.user  # author 속성에 로그인 계정 저장
             answer.save()  # 최종 저장
-            return redirect('pybo:detail', question_id=question.id)
+            #http://127.0.0.1:8000/pybo/515/#answer_46
+            return redirect('{}#answer_{}'.
+                            format(resolve_url('pybo:detail',question_id=question.id), answer.id))
     else:
         form = AnswerForm()
     # form validation

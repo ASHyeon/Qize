@@ -16,35 +16,22 @@ from django.utils import timezone
 from ..froms import QusetionForm
 from ..models import Question
 
-@login_required(login_url='common:login') # 로그인이 되어있지 않으면 login 페이지로 이동
-def question_create(request):
-    '''질문등록'''
-
-    logging.info('request.method:{}'.format(request.method))
-    if request.method == 'POST':
-        logging.info('question_create post')
-        # 저장
-        form = QusetionForm(request.POST)  # request.POST 데이터
-
-        if form.is_valid():  # form(질문등록)이 유효하면
-            question = form.save(commit=False)  # subject, content만 저장(commit은 하지 않음)
-            question.create_date = timezone.now()
-            question.author = request.user # author 속성에 로그인 계정 저장
-            question.save()  # 날짜 까지 생성해서 저장(commit)
-            return redirect("pybo:index")
-    else:
-        form = QusetionForm()
-    context = {'form': form}
-    return render(request, 'pybo/question_form.html', context)
-
 @login_required(login_url='common:login')
-def question_delete(request, question_id):
-    question = get_object_or_404(Question,pk=question_id)
-    if request.user != question.author:
-        messages.error(request, '삭제 권한이 없습니다.')
-        return redirect('pybo:detail', question_id=question_id)
-    question.delete() # 삭제
-    return redirect('pybo:index')
+def question_vote(request, question_id):
+    '''질문 : 좋아요'''
+    logging.info('1. question_vote question_id:{} '.format(question_id))
+    question = get_object_or_404(Question, pk=question_id)
+
+    # 본인 글은 추천 하지 못하게
+    if request.user == question.author:
+        messages.error(request, '본인이 작성한 글은 추천할 수 없습니다.')
+    else:
+        question.voter.add(request.user)
+
+    return redirect('pybo:detail', question_id = question_id)
+
+    pass
+
 
 @login_required(login_url='common:login')
 def question_modify(request, question_id):
@@ -74,3 +61,33 @@ def question_modify(request, question_id):
     context = {'form':form}
     return render(request,'pybo/question_form.html',context)
     pass
+
+@login_required(login_url='common:login') # 로그인이 되어있지 않으면 login 페이지로 이동
+def question_create(request):
+    '''질문등록'''
+
+    logging.info('request.method:{}'.format(request.method))
+    if request.method == 'POST':
+        logging.info('question_create post')
+        # 저장
+        form = QusetionForm(request.POST)  # request.POST 데이터
+
+        if form.is_valid():  # form(질문등록)이 유효하면
+            question = form.save(commit=False)  # subject, content만 저장(commit은 하지 않음)
+            question.create_date = timezone.now()
+            question.author = request.user # author 속성에 로그인 계정 저장
+            question.save()  # 날짜 까지 생성해서 저장(commit)
+            return redirect("pybo:index")
+    else:
+        form = QusetionForm()
+    context = {'form': form}
+    return render(request, 'pybo/question_form.html', context)
+
+@login_required(login_url='common:login')
+def question_delete(request, question_id):
+    question = get_object_or_404(Question,pk=question_id)
+    if request.user != question.author:
+        messages.error(request, '삭제 권한이 없습니다.')
+        return redirect('pybo:detail', question_id=question_id)
+    question.delete() # 삭제
+    return redirect('pybo:index')
